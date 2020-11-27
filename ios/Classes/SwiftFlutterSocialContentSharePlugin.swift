@@ -35,19 +35,8 @@ public class SwiftFlutterSocialContentSharePlugin: NSObject, FlutterPlugin {
                     
                 case "ShareType.instagramWithImageUrl":
                     self.result?(shareImageUrl)
-                    let url = URL(string: shareImageUrl)
-                    if let urlData = url {
-                        let data = try? Data(contentsOf: urlData)
-                        if let datas = data {
-                            shareInstagramWithImageUrl(image: UIImage(data: datas) ?? UIImage()) { (flag) in
-                            }
-                        }else{
-                            self.result?("Something went wrong")
-                        }
-                    }
-                    else{
-                        self.result?("Could not load the image")
-                    }
+                    shareInstagramWithImageUrl(image: UIImage(contentsOfFile: shareImageUrl) ?? UIImage())
+    
                     break
                 case "ShareType.more":
                     self.result?("Method not implemented")
@@ -137,7 +126,8 @@ public class SwiftFlutterSocialContentSharePlugin: NSObject, FlutterPlugin {
             if let sharingUrl = self.shareURL {
                 if let urlForRedirect = NSURL(string: sharingUrl) {
                     if #available(iOS 10.0, *) {
-                        UIApplication.shared.open(urlForRedirect as URL, options: [:], completionHandler: nil)
+                        UIApplication.shared.open(urlForRedirect as URL, options: [:]
+, completionHandler: nil)
                     }
                     else{
                         UIApplication.shared.openURL(urlForRedirect as URL)
@@ -159,7 +149,8 @@ public class SwiftFlutterSocialContentSharePlugin: NSObject, FlutterPlugin {
         let appURL  = NSURL(string: "whatsapp://send?phone=\(String(describing: number))&text=\(urlStringEncoded!)")
         if UIApplication.shared.canOpenURL(appURL! as URL) {
             if #available(iOS 10.0, *) {
-                UIApplication.shared.open(appURL! as URL, options: [:], completionHandler: nil)
+                UIApplication.shared.open(appURL! as URL, options: [:]
+, completionHandler: nil)
             }
             else {
                 UIApplication.shared.openURL(appURL! as URL)
